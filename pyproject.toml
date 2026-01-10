@@ -1,0 +1,14 @@
+[project]
+name = "retailanalytics"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.128.0",
+    "pandas>=2.3.3",
+    "python-multipart>=0.0.21",
+    "scikit-learn>=1.8.0",
+    "sqlmodel>=0.0.31",
+    "uvicorn>=0.40.0",
+]
