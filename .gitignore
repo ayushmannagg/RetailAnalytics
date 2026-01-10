@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
-backend/database.db
+
 
 # React / Frontend
 node_modules/
