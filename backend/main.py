@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 from database import create_db_and_tables
 from routers import sales
 from seed import seed_data
+import os 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
