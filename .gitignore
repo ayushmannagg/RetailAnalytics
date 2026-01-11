@@ -6,10 +6,7 @@ venv/
 
 
 # React / Frontend
-node_modules/
-dist/
-.env
-.DS_Store
+
 
 # Editor
 .vscode/
