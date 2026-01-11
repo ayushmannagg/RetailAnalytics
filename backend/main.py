@@ -7,6 +7,7 @@ from database import create_db_and_tables
 from routers import sales
 from seed import seed_data
 import os 
+from pathlib import Path
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -20,6 +21,10 @@ origins = [
     "http://127.0.0.1:5173",
 ]
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+DIST_DIR = BASE_DIR / "frontend" / "dist"
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -28,11 +33,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(sales.router)
 
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
+
+app.include_router(sales.router)
+
+assets_path = DIST_DIR / "assets"
+if assets_path.exists():
+    app.mount("/assets", StaticFiles(directory=str(assets_path)), name="assets")
 
 if os.path.exists("../frontend/dist"):
     app.mount("/assets", StaticFiles(directory="../frontend/dist/assets"), name="assets")
@@ -43,10 +53,12 @@ async def catch_all(full_path: str):
     if full_path.startswith("sales"):
         return {"error": "API route not found"}
     
-    # Otherwise, return the React App
-    if os.path.exists("../frontend/dist/index.html"):
-        return FileResponse("../frontend/dist/index.html")
-    return {"message": "Frontend not built. Run 'npm run build' first."}
+    # Check if index.html exists
+    index_path = DIST_DIR / "index.html"
+    if index_path.exists():
+        return FileResponse(str(index_path))
+        
+    return {"message": "Frontend not built. Check 'frontend/dist' folder."}
 
 @app.get("/seed-db")
 def trigger_seeding():
